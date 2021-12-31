@@ -1,5 +1,6 @@
 import 'dotenv/config';
 import { config, createSchema } from '@keystone-next/keystone/schema';
+import { User } from './schemas/User';
 
 const databaseURL =
   process.env.DATABASE_URL ||
@@ -23,7 +24,8 @@ export default config({
     // TODO: Add data seeding here
   },
   lists: createSchema({
-    // Scheme items go in here
+    // Schema items go in here
+    User,
   }),
   ui: {
     // TODO: change this for roles

@@ -6,6 +6,9 @@ import {
   statelessSessions,
 } from '@keystone-next/keystone/session';
 import { User } from './schemas/User';
+import { Product } from './schemas/Product';
+import { ProductImage } from './schemas/ProductImage';
+import { insertSeedData } from './seed-data/index';
 
 const databaseURL =
   process.env.DATABASE_URL ||
@@ -37,16 +40,25 @@ export default withAuth(
     db: {
       adapter: 'mongoose',
       url: databaseURL,
+      async onConnect(keystone) {
+        console.log('Connected to the database');
+        if (process.argv.includes('--seed-data')) {
+          await insertSeedData(keystone);
+        }
+      },
       // TODO: Add data seeding here
     },
     lists: createSchema({
       // Schema items go in here
       User,
+      Product,
+      ProductImage,
     }),
     ui: {
       // Show the UI who for people who pass this test.
       isAccessAllowed: ({ session }) => {
         console.log(session);
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         return !!session?.data;
       },
     },
